@@ -1,17 +1,17 @@
 import React from 'react'
 
-const Country = ({country}) => {
-  if(country=={}){return null;}
+const Country = ({displayCountry}) => {
+  if(displayCountry===null){return null;}
   return (
     <div>
-      <h1>{country.name.common}</h1>
-      <p>capital {country.capital[0]}</p>
-      <p>area {country.area}</p>
+      <h1>{displayCountry.name.common}</h1>
+      <p>capital {displayCountry.capital[0]}</p>
+      <p>area {displayCountry.area}</p>
       <p><b>languages:</b></p>
       <ul>
-        {Object.values(country.languages).map(lang=><li>{lang}</li>)}
+        {Object.values(displayCountry.languages).map(lang=><li>{lang}</li>)}
       </ul>
-      <img src={country.flags[1]} />
+      <img src={displayCountry.flags[1]} />
     </div>
   )
 }
