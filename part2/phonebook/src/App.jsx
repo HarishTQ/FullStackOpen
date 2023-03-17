@@ -1,5 +1,5 @@
 import {useState,useEffect} from 'react'
-import axios from 'axios'
+import contactService from './contactService';
 // TODO ex2.10 refractor pending
 
 const App = () => {
@@ -9,7 +9,9 @@ const App = () => {
   const [filter,setFilter] = useState('')
 
   useEffect(()=>{
-    axios.get('http://localhost:3001/persons').then((result) => {
+    contactService
+      .getAll()
+      .then((result) => {
       setPersons(result.data)
     })
   },[])
@@ -22,9 +24,20 @@ const App = () => {
     event.preventDefault();
     const filterdPerson = persons.filter((person)=>person.name===newName);
     if(filterdPerson.length===0){
-      console.log(filterdPerson)
-      setPersons(persons.concat({name:newName,number:newNumber}))
-      setFilter('')  
+      const person = {
+        name:newName,
+        number:newNumber
+      }
+
+      contactService
+        .create(person)
+        .then((result)=>{
+          setPersons(persons.concat(person))
+          setFilter('')
+          setNewName('')
+          setNewNumber('')
+      })
+
     }else{
       window.alert(`${newName} is already added to phonebook`)
     }
