@@ -1,51 +1,71 @@
-import {useState,useEffect} from 'react'
+import { useState, useEffect } from 'react'
+import Filter from './components/Filter';
+import Form from './components/Form';
+import Notification from './components/Notification';
+import Persons from './components/Persons';
+
 import contactService from './contactService';
 // TODO ex2.10 refractor pending
 
-const App = () => {
-  const [persons,setPersons] = useState([]);
-  const [newName,setNewName] = useState('');
-  const [newNumber,setNewNumber] = useState('');
-  const [filter,setFilter] = useState('')
 
-  useEffect(()=>{
+
+const App = () => {
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
+  const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
     contactService
       .getAll()
       .then((result) => {
-      setPersons(result.data)
-    })
-  },[])
+        setPersons(result.data)
+      })
+  }, [])
 
   const contactsToShow = filter === '' ? persons : persons.filter(person =>
-      person.name.toLowerCase().includes(filter.toLowerCase())
+    person.name.toLowerCase().includes(filter.toLowerCase())
   )
 
   const onSubmit = (event) => {
     event.preventDefault();
     const person = {
-      name:newName,
-      number:newNumber
+      name: newName,
+      number: newNumber
     }
-    const filterdPerson = persons.filter((person)=>person.name===newName);
-    if(filterdPerson.length===0){
+    const filterdPerson = persons.filter((person) => person.name.toLowerCase() === newName.toLowerCase());
+    if (filterdPerson.length === 0) {
       contactService
         .create(person)
-        .then((result)=>{
+        .then((result) => {
           setPersons(persons.concat(result.data))
           setFilter('')
           setNewName('')
           setNewNumber('')
-      })
+          setMessage({ type: "success", content: `${result.data.name} was successfully added` })
+          setTimeout(() => { setMessage('') }, 5000)
+        })
+        .catch(error => {
+          setMessage({ type: "errror", content: `${filterdPerson[0].name} was already deleted from server` })
+          setTimeout(() => { setMessage('') }, 5000)
+        })
 
-    }else{
-      if(window.confirm(`${newName} is already added to phonebook, do u want to replace number with new one?`)){
+    } else {
+      if (window.confirm(`${newName} is already added to phonebook, do u want to replace number with new one?`)) {
         contactService
-          .update(filterdPerson[0].id,person)
-          .then((result)=>{
-            setPersons(persons.filter(person=>person.id!=filterdPerson[0].id).concat(result.data))
+          .update(filterdPerson[0].id, person)
+          .then((result) => {
+            setPersons(persons.filter(person => person.id != filterdPerson[0].id).concat(result.data))
             setFilter('')
             setNewName('')
             setNewNumber('')
+            setMessage({ type: "success", content: `${result.data.name} was successfully updated` })
+            setTimeout(() => { setMessage('') }, 5000)
+          })
+          .catch(error => {
+            setMessage({ type: "errror", content: `${filterdPerson[0].name} was already deleted from server` })
+            setTimeout(() => { setMessage('') }, 5000)
           })
       }
     }
@@ -63,27 +83,26 @@ const App = () => {
     setFilter(e.target.value);
   }
 
-  const handleDelete = (id,name) =>{
-    if(window.confirm(`Delete ${name}`)){
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}`)) {
       contactService.del(id)
-      .then((result)=>{
-        setPersons(persons.filter(person=>person.id!=id));
-      })
+        .then((result) => {
+          setPersons(persons.filter(person => person.id != id));
+          setMessage({ type: "success", content: `${name} was successfully added` })
+          setTimeout(() => { setMessage('') }, 5000)
+        })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <input value={filter} onChange={handleFilterChange} />
+      <Notification message={message} />
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>add a new</h2>
-      <form onSubmit={onSubmit}>
-      <p>name: <input value={newName} onChange={handleNameChange}/></p>
-      <p>name: <input value={newNumber} onChange={handleNumberChange}/></p>
-        <button type='submit'>add</button>
-      </form>
+      <Form onSubmit={onSubmit} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      {contactsToShow.map((person)=><p>{person.name} {person.number} <button onClick={()=>{handleDelete(person.id,person.name)}}>delete</button></p>)}
+      <Persons contactsToShow={contactsToShow} handleDelete={handleDelete} />
     </div>
   )
 }
