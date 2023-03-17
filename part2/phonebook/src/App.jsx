@@ -9,7 +9,13 @@ const App = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    setPersons(persons.concat({name:newName}))  
+    const filterdPerson = persons.filter((person)=>person.name===newName);
+    if(filterdPerson.length===0){
+      console.log(filterdPerson)
+      setPersons(persons.concat({name:newName}))  
+    }else{
+      window.alert(`${newName} is already added to phonebook`)
+    }
   }
 
   const handleInputChange = (e) => {
