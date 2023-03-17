@@ -22,24 +22,32 @@ const App = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
+    const person = {
+      name:newName,
+      number:newNumber
+    }
     const filterdPerson = persons.filter((person)=>person.name===newName);
     if(filterdPerson.length===0){
-      const person = {
-        name:newName,
-        number:newNumber
-      }
-
       contactService
         .create(person)
         .then((result)=>{
-          setPersons(persons.concat(person))
+          setPersons(persons.concat(result.data))
           setFilter('')
           setNewName('')
           setNewNumber('')
       })
 
     }else{
-      window.alert(`${newName} is already added to phonebook`)
+      if(window.confirm(`${newName} is already added to phonebook, do u want to replace number with new one?`)){
+        contactService
+          .update(filterdPerson[0].id,person)
+          .then((result)=>{
+            setPersons(persons.filter(person=>person.id!=filterdPerson[0].id).concat(result.data))
+            setFilter('')
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     }
   }
 
@@ -55,6 +63,15 @@ const App = () => {
     setFilter(e.target.value);
   }
 
+  const handleDelete = (id,name) =>{
+    if(window.confirm(`Delete ${name}`)){
+      contactService.del(id)
+      .then((result)=>{
+        setPersons(persons.filter(person=>person.id!=id));
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -66,7 +83,7 @@ const App = () => {
         <button type='submit'>add</button>
       </form>
       <h2>Numbers</h2>
-      {contactsToShow.map((person)=><p>{person.name} {person.number}</p>)}
+      {contactsToShow.map((person)=><p>{person.name} {person.number} <button onClick={()=>{handleDelete(person.id,person.name)}}>delete</button></p>)}
     </div>
   )
 }
