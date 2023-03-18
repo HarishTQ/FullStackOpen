@@ -3,7 +3,7 @@ const app = express()
 require('dotenv').config()
 
 const port =  process.env.PORT || 3000
-const dummyData = [
+let dummyData = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -39,15 +39,20 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id',(req,res)=>{
     const id = req.params.id;
-    const filteredPerson = dummyData.filter(d=>d.id==id);
-    if(filteredPerson.length!=0){
-        return res.send(`<p>name: ${filteredPerson[0].name}</p>
-            <p>number : ${filteredPerson[0].number} </p>`)
-    }
-    else{
-        return res.status(404);
+    const person = dummyData.find(person => person.id == id)
+    if (person) {
+        res.json(person)
+    } else {
+        res.status(404).end()
     }
 })
+
+app.delete('/api/persons/:id',(req,res)=>{
+    const id = req.params.id;
+    dummyData = dummyData.filter(data => data.id!=id)
+    res.status(204).end()
+})
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
