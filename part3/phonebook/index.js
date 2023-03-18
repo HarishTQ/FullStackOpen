@@ -26,6 +26,8 @@ let dummyData = [
     }
 ]
 
+app.use(express.json())
+
 app.get('/info',(req,res)=>{
     res.send(`
     <p>Phonebook has infor for ${dummyData.length} people</p>
@@ -35,6 +37,17 @@ app.get('/info',(req,res)=>{
 
 app.get('/api/persons', (req, res) => {
   res.json({dummyData})
+})
+
+app.post('/api/persons',(req,res)=>{
+    const body = req.body;
+    const newPerson = {
+        id:Math.floor(Math.random()*10000),
+        name:body.name,
+        number:body.number
+    }
+    dummyData.push(newPerson)
+    res.json(newPerson).status(202)
 })
 
 app.get('/api/persons/:id',(req,res)=>{
