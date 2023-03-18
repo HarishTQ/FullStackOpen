@@ -37,6 +37,18 @@ app.get('/api/persons', (req, res) => {
   res.json({dummyData})
 })
 
+app.get('/api/persons/:id',(req,res)=>{
+    const id = req.params.id;
+    const filteredPerson = dummyData.filter(d=>d.id==id);
+    if(filteredPerson.length!=0){
+        return res.send(`<p>name: ${filteredPerson[0].name}</p>
+            <p>number : ${filteredPerson[0].number} </p>`)
+    }
+    else{
+        return res.status(404);
+    }
+})
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
 })
