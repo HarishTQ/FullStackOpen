@@ -117,7 +117,7 @@ const App = () => {
         setPersons(persons.filter((person) => person.id != id));
         setMessage({
           type: "success",
-          content: `${name} was successfully added`,
+          content: `${name} was successfully deleted`,
         });
         setTimeout(() => {
           setMessage("");
