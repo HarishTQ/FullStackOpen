@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const Contact = require('./models/Contact')
 const app = express()
 require('dotenv').config()
 
@@ -47,7 +48,9 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json( Phonebook )
+    Contact.find({}).then((result)=>{
+        res.json(result)
+    })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -58,14 +61,13 @@ app.post('/api/persons', (req, res) => {
     else if (Phonebook.find(entrie => entrie.name === body.name)) {
         return res.status(400).json({error: 'Name must be unique'})
     }
-    const newPerson = {
-        id: Math.floor(Math.random() * 10000),
+    const newContact = new Contact({
         name: body.name,
         number: body.number
-    }
-    Phonebook.push(newPerson)
-    return res.json(newPerson).status(202)
-
+    })
+    newContact.save().then((result)=>{
+        res.json(result).status(202)
+    })
     
 })
 
