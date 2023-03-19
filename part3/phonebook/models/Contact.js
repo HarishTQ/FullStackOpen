@@ -3,7 +3,11 @@ const mongoose = require('mongoose')
 const url = process.env.MONGODB_URI || 'mongodb://localhost:27017'
 
 const contactSchema = new mongoose.Schema({
-    name:String,
+    name:{
+		type:String,
+		minLength:3,
+		required:true
+	},
     number:Number
 })
 
