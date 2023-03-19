@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const app = express()
 require('dotenv').config()
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 let Phonebook = [
     {
         "id": 1,
@@ -40,13 +40,14 @@ app.use(morgan((tokens,req,res)=>{
         JSON.stringify(req.body)
     ].join(' ')
 }))
+app.use(express.static('dist'))
 
 app.get('/info', (req, res) => {
     res.send(`<p>Phonebook has infor for ${Phonebook.length} people</p><p>${new Date()}</p>`)
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json({ Phonebook })
+    res.json( Phonebook )
 })
 
 app.post('/api/persons', (req, res) => {
