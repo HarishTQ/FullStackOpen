@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const url = process.env.MONGODB_URI || 'mongodb://localhost:27017'
+const url = process.env.MONGO_URI || 'mongodb://localhost:27017'
 
 const contactSchema = new mongoose.Schema({
     name:{
@@ -8,7 +8,17 @@ const contactSchema = new mongoose.Schema({
 		minLength:3,
 		required:true
 	},
-    number:Number
+    number:{
+		type:String,
+		validate:{
+			validator:function(v){
+				return /^\d{2,3}-\d+$/.test(v);
+			},
+			message: props => `${props.value} is not a valid phone number!`
+		},
+		required:true,
+		minLength:8
+	}
 })
 
 contactSchema.set('toJSON', {

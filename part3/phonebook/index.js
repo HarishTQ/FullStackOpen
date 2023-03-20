@@ -29,7 +29,7 @@ let Phonebook = [
 ]
 const errorHandler = (error, request, response, next) => {
     console.error(error)
-    next(error)
+    response.status(422).json(error)
   }
 
 const unknownEndpoint = (request, response) => {
