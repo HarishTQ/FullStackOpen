@@ -27,7 +27,7 @@ let Phonebook = [
         "number": "39-23-6423122"
     }
 ]
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, request, response) => {
     console.error(error)
     response.status(422).json(error)
   }
@@ -90,9 +90,9 @@ app.put('/api/persons/:id',(req,res,next)=>{
             .catch(error=>next(error))
 })
 
-app.get('/api/persons/:id', (req, res,nexy) => {
+app.get('/api/persons/:id', (req, res,next) => {
     const id = req.params.id;
-    Contact.findById(req.params.id)
+    Contact.findById(id)
         .then((result)=>{
             res.json(result)
         })
@@ -103,6 +103,7 @@ app.delete('/api/persons/:id', (req, res,next) => {
     const id = req.params.id;
     Contact.findByIdAndRemove(id)
         .then((result)=>{
+            console.log(result)
             res.status(204).end()
         })
         .catch(error=>next(error))
