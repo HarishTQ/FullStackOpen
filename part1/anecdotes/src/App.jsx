@@ -15,11 +15,8 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [votes,setVotes] = useState(new Array(anecdotes.length).fill(0))
 
-  const setRandomAnecdote = () => () => {
-    let random = Math.floor(anecdotes.length * Math.random())
-    setSelected(random)
-  }
-
+  const setRandomAnecdote = () => () => setSelected(Math.floor(anecdotes.length * Math.random()))
+  
   const handleVote = () => () => {
     let temp = [...votes]
     temp[selected]++;
