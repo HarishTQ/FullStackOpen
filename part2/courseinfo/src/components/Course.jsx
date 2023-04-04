@@ -4,21 +4,9 @@ const Header = ({ course }) => <h1>{course}</h1>
 
 const Total = ({ sum }) => <p>Number of exercises {sum}</p>
 
-const Part = ({ part }) => {
-  return (
-    <p>
-      {part.name} {part.exercises}
-    </p>
-  )
-}
+const Part = ({ part }) => <p>{part.name} {part.exercises}</p>
 
-const Content = ({ parts }) => {
-  return (
-    <>
-      {parts.map(part => <Part part={part} />)}
-    </>
-  )
-}
+const Content = ({ parts }) => <>{parts.map(part => <Part part={part} />)}</>
 
 const Course = ({ course }) => {
   return (
