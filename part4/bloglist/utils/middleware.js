@@ -15,7 +15,6 @@ const unkownEndPoint = (req, res, next) => {
 const errorHandler = (error, req, res, next) => {
   logger.info(error.message);
   res.status(400).json({ error: error.message });
-  next(error);
 };
 
 module.exports = { requestLogger, unkownEndPoint, errorHandler };

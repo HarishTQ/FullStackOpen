@@ -1,4 +1,5 @@
 const express = require("express");
+require("express-async-error");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
