@@ -28,12 +28,12 @@ let Phonebook = [
     }
 ]
 
-const errorHandler = (error, request, response) => {
-    console.error(error)
+const errorHandler = (error, request, response,next) => {
+    console.error(error.message)
     response.status(422).json(error)
   }
 
-const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (request, response,next) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
