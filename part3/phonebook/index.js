@@ -27,13 +27,14 @@ let Phonebook = [
         "number": "39-23-6423122"
     }
 ]
+
 const errorHandler = (error, request, response) => {
     console.error(error)
     response.status(422).json(error)
   }
 
 const unknownEndpoint = (request, response) => {
-response.status(404).send({ error: 'unknown endpoint' })
+    response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(express.json())
@@ -111,7 +112,7 @@ app.delete('/api/persons/:id', (req, res,next) => {
 
 app.use(errorHandler)
 app.use(unknownEndpoint)
-  
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
 })
