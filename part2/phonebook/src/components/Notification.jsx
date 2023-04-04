@@ -8,9 +8,9 @@ const successStyle = {
     border_radius: 5,
     padding: 10,
     margin_bottom: 10
-  }
+}
   
-  const errorStyle = {
+const errorStyle = {
     color: 'red',
     background: 'lightgrey',
     font_size: 20,
@@ -18,7 +18,7 @@ const successStyle = {
     border_radius: 5,
     padding: 10,
     margin_bottom: 10
-  }
+}
 
 const Notification = ({message}) => {
     if(message===''){return null;}

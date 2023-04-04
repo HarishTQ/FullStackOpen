@@ -26,9 +26,9 @@ const App = () => {
   };
 
   const handleNumberChange = (e) => {
-    setNewNumber(e.target.value);
+    setNewNumber(e.target.value)
   };
-
+  
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -84,12 +84,17 @@ const App = () => {
 
   const handleDelete = (id, name) => {
     if (window.confirm(`Delete ${name}`)) {
-      contactService.del(id).then((result) => {
-        setPersons(persons.filter((person) => person.id != id));
-        console.log(error.response.data.error)
-        setMessage({type: "error",content: error.response.data.message});
-        setTimeout(() => {setMessage("");}, 5000);
-      });
+      contactService.del(id)
+        .then((result) => {
+          setPersons(persons.filter((person) => person.id != id));
+          setMessage({type:"success",content:`${name} was successfully deleted.`})
+          setTimeout(() => {setMessage("");}, 5000);
+        })
+        .catch((error)=>{
+          console.log(error.response.data.error)
+          setMessage({type: "error",content: error.response.data.message});
+          setTimeout(() => {setMessage("");}, 5000);
+        })
     }
   };
 
