@@ -53,7 +53,8 @@ app.use(morgan((tokens,req,res)=>{
 app.use(express.static('dist'))
 
 app.get('/info', (req, res) => {
-    res.send(`<p>Phonebook has infor for ${Phonebook.length} people</p><p>${new Date()}</p>`)
+    const length = Contact.find({}).then(result=>result.length)
+    res.send(`<p>Phonebook has info for ${length} people</p><p>${new Date()}</p>`)
 })
 
 app.get('/api/persons', (req, res,next) => {
@@ -65,16 +66,19 @@ app.get('/api/persons', (req, res,next) => {
 
 app.post('/api/persons', (req, res,next) => {
     const body = req.body;
+
     if (!body.name || !body.number) {
         return res.status(400).json({ error: 'name or number absent' })
     }
-    else if (Phonebook.find(entrie => entrie.name === body.name)) {
+    else if (Phonebook.find(contact => contact.name === body.name)) {
         return res.status(400).json({error: 'Name must be unique'})
     }
+
     const newContact = new Contact({
         name: body.name,
         number: body.number
     })
+
     newContact.save().then((result)=>{
         res.json(result).status(202)
     })

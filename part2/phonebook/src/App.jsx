@@ -39,10 +39,6 @@ const App = () => {
     const filterdPerson = persons.filter(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
-    if(!Number.isInteger(newNumber)){
-      setMessage({type: "error",content: 'Number must not a string',});
-      setTimeout(() => {setMessage("");}, 5000);
-    }
     
     if (filterdPerson.length === 0){
       contactService
