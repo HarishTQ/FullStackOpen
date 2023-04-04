@@ -7,14 +7,14 @@ const Country = ({ displayCountry }) => {
 
   const [weather, setWeather] = useState([])
   const apiKey = process.env.REACT_APP_API_KEY
+
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${displayCountry.latlng[0]}&lon=${displayCountry.latlng[1]}&appid=${apiKey}`)
       .then((result) => setWeather(result.data))
-  }, [])
-
+    }, [])
 
   return (
-    <div>
+    <>
       <h1>{displayCountry.name.common}</h1>
       <p>capital {displayCountry.capital[0]}</p>
       <p>area {displayCountry.area}</p>
@@ -24,7 +24,7 @@ const Country = ({ displayCountry }) => {
       </ul>
       <img src={displayCountry.flags.png} />
       <Weather weather={weather} capital={displayCountry.capital[0]} />
-    </div>
+    </>
   )
 }
 

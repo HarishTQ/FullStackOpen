@@ -1,4 +1,4 @@
-//Rest api is down so using data from wayback machine, omg im so genius
+//Rest api is down so using data from wayback machine, omg im so genius. I'm really a genius
 const data = [
     {
       "name": {

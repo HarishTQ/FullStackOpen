@@ -2,10 +2,7 @@ import React from 'react'
 
 const Weather = ({ weather, capital }) => {
     if (weather.length == 0) { return null; }
-    //
-    //
-    //
-    console.log(weather)
+    
     return (
         <div>
             <h1>Weather in {capital}</h1>
