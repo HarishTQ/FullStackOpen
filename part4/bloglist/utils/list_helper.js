@@ -26,18 +26,19 @@ const favoriteBlog = (blogs) =>{
 
 const mostBlogs = (blogs) =>{
     if(blogs.count==0){return {}}
-    const authorCount = _.countBy(blogs,"author");
-    const objectKeys = Object.keys(authorCount)
-    const topAuthor = objectKeys.reduce((s,c)=>{
-        return authorCount[s]>authorCount[c]?s:c;
-    },objectKeys[0])
-    return{
-        author:topAuthor,
-        blogs:authorCount[topAuthor]
-    }
+    const blogsByAuthor = _.groupBy(blogs,'author')
+    const blogsCountByAuthor = _.mapValues(blogsByAuthor,(blogs=>blogs.length))
+    const topAuthor = _.maxBy(_.keys(blogsCountByAuthor),(author)=>blogsCountByAuthor[author])
+    return { author:topAuthor,blogs:blogsCountByAuthor[topAuthor]}
 }
 
-console.log(mostBlogs(dummyData))
+const mostLikes = (blogs) => {
+    if(blogs.count==0){return {}}
+    const blogsByAuthor = _.groupBy(blogs,'author')
+    const likesByAuthor = _.mapValues(blogsByAuthor,(blogs)=>_.sumBy(blogs,'likes'))
+    const topAuthor = _.maxBy(_.keys(blogsByAuthor),(author)=>likesByAuthor[author])
+    return { author:topAuthor,likes:likesByAuthor[topAuthor]}
+}
 
-//console.log(totalLikes([{likes:4},{likes:2}]))
-module.exports = {dummy,totalLikes,favoriteBlog,mostBlogs}
+
+module.exports = {dummy,totalLikes,favoriteBlog,mostBlogs,mostLikes}
