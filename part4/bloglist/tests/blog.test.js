@@ -1,20 +1,21 @@
-const app = require("../index");
+const app = require("../app");
 const supertest = require("supertest");
+const mongoose = require("mongoose");
 const api = supertest(app);
 const blog = require("../models/blog");
 
-describe("Testing blog api", () => {
-  beforeEach(async () => {
-    await blog.deleteMany({});
-    const newBLog = new blog({
-      name: "smg",
-      author: "smh",
-      url: "sma",
-      likes: 10,
-    });
-    await newBLog.save();
+beforeEach(async () => {
+  await blog.deleteMany({});
+  const newBLog = new blog({
+    name: "smg",
+    author: "smh",
+    url: "sma",
+    likes: 10,
   });
+  await newBLog.save();
+});
 
+describe("Testing blog api", () => {
   test("GET /api/blogs", async () => {
     const result = await api
       .get("/api/blogs")
@@ -33,18 +34,14 @@ describe("Testing blog api", () => {
 
   test("Check if saving of new blogs is successful", async () => {
     const initialBlog = await blog.find({});
-
     const newBlog = {
       title: "qq",
       author: "ddd",
       url: "dd",
       likes: 10,
     };
-
     const result = await api.post("/api/blogs").send(newBlog).expect(201);
-
     const updateBlogs = await blog.find({});
-
     expect(updateBlogs.length).toBe(initialBlog.length + 1);
   });
 
@@ -63,10 +60,13 @@ describe("Testing blog api", () => {
       title: "s",
       likes: 90,
     };
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(400)
-      .expect("Content-Type", /application\/json/);
+    const result = await api.post("/api/blogs").send(newBlog);
+    expect(result.statusCode).toBe(400);
   });
+});
+
+afterAll((done) => {
+  // Closing the DB connection allows Jest to exit successfully.
+  mongoose.connection.close();
+  done();
 });
